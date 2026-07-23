@@ -88,3 +88,5 @@
 - Laravel
 - Inertia
 - TailwindCSS
+# Design system
+Mobile first read DESIGN.md file
