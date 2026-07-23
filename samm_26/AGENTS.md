@@ -88,3 +88,4 @@
 - Laravel
 - Inertia
 - TailwindCSS
+-
