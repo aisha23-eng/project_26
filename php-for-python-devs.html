@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP for Python Developers</title>
+<style>
+:root {
+  --bg: #F8F9FC;
+  --surface: #FFFFFF;
+  --text: #1C1D2E;
+  --text-muted: #5B5E7A;
+  --text-dim: #9497AC;
+  --border: #E2E4EF;
+  --php: #5850EC;
+  --php-surface: rgba(88, 80, 236, 0.07);
+  --py: #2B5B84;
+  --py-surface: rgba(43, 91, 132, 0.07);
+  --code-bg: #F0F1F6;
+  --code-border: #E2E4EF;
+  --green: #2D8A4E;
+  --orange: #C06B2A;
+  --hl-keyword: #5850EC;
+  --hl-string: #2D8A4E;
+  --hl-comment: #9497AC;
+  --hl-number: #C06B2A;
+  --hl-function: #8B5CF6;
+  --hl-variable: #0D9488;
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-code: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, "Courier New", monospace;
+  --max-width: 736px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  line-height:1.7;
+  padding:0 var(--space-md);
+}
+a{color:var(--php);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;height:auto}
+
+/* Layout */
+.container{max-width:var(--max-width);margin:0 auto;padding:0}
+
+/* Typography */
+h1,h2,h3{
+  font-family:var(--font-display);
+  font-weight:400;
+  text-wrap:balance;
+  line-height:1.25;
+  color:var(--text);
+}
+h1{
+  font-size:2.5rem;
+  margin-bottom:var(--space-sm);
+  letter-spacing:-0.02em;
+}
+h2{
+  font-size:1.625rem;
+  margin-top:var(--space-3xl);
+  margin-bottom:var(--space-md);
+  padding-bottom:var(--space-sm);
+  border-bottom:1px solid var(--border);
+}
+h3{
+  font-size:1.1875rem;
+  margin-top:var(--space-xl);
+  margin-bottom:var(--space-sm);
+  color:var(--text-muted);
+}
+p,li{color:var(--text)}
+p{margin-bottom:var(--space-md);max-width:65ch}
+.subtitle{
+  font-size:1.125rem;
+  color:var(--text-muted);
+  margin-bottom:var(--space-lg);
+}
+.lede{
+  font-size:1.0625rem;
+  color:var(--text-muted);
+  margin-bottom:0;
+}
+
+/* Navigation bridge */
+.bridge{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--space-sm);
+  padding:var(--space-md) 0;
+  font-size:0.875rem;
+  font-weight:500;
+  color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+  margin-bottom:var(--space-3xl);
+}
+.bridge .tag{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:2px 10px;
+  border-radius:3px;
+  font-size:0.75rem;
+  font-weight:600;
+  letter-spacing:0.03em;
+  text-transform:uppercase;
+}
+.bridge .tag-py{background:var(--py-surface);color:var(--py)}
+.bridge .tag-php{background:var(--php-surface);color:var(--php)}
+.bridge .arrow{color:var(--text-dim);font-size:1rem}
+
+/* Hero */
+.hero{padding:var(--space-2xl) 0 var(--space-xl)}
+
+/* Quick Reference Table */
+.ref-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.875rem;
+  margin-bottom:var(--space-2xl);
+}
+.ref-table th,.ref-table td{
+  text-align:left;
+  padding:var(--space-sm) var(--space-md);
+  border-bottom:1px solid var(--border);
+}
+.ref-table th{
+  font-size:0.75rem;
+  font-weight:600;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  padding-top:0;
+}
+.ref-table td:first-child{
+  font-weight:500;
+  color:var(--text-muted);
+  white-space:nowrap;
+  width:1%;
+}
+.ref-table code{
+  font-family:var(--font-code);
+  font-size:0.8125rem;
+  background:var(--code-bg);
+  padding:1px 6px;
+  border-radius:3px;
+  white-space:nowrap;
+}
+
+/* Code Comparison Grid */
+.code-pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:var(--space-lg);
+  margin:var(--space-lg) 0 var(--space-xl);
+}
+@media(max-width:640px){
+  .code-pair{grid-template-columns:1fr;gap:var(--space-md)}
+}
+.code-block{
+  background:var(--code-bg);
+  border-left:3px solid var(--border);
+  border-radius:0 4px 4px 0;
+  overflow-x:auto;
+  position:relative;
+}
+.code-block.py{border-left-color:var(--py)}
+.code-block.php{border-left-color:var(--php)}
+.code-block pre{
+  font-family:var(--font-code);
+  font-size:0.8125rem;
+  line-height:1.6;
+  padding:var(--space-md);
+  margin:0;
+  tab-size:4;
+}
+.code-block .lang-label{
+  position:absolute;
+  top:0;
+  right:0;
+  font-size:0.625rem;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border-radius:0 4px 0 4px;
+}
+.code-block.py .lang-label{background:var(--py-surface);color:var(--py)}
+.code-block.php .lang-label{background:var(--php-surface);color:var(--php)}
+
+/* Syntax highlighting */
+.hl-kw{color:var(--hl-keyword)}
+.hl-str{color:var(--hl-string)}
+.hl-com{color:var(--hl-comment)}
+.hl-num{color:var(--hl-number)}
+.hl-fn{color:var(--hl-function)}
+.hl-var{color:var(--hl-variable)}
+.hl-op{color:var(--text-muted)}
+
+/* Info boxes */
+.box{
+  padding:var(--space-md) var(--space-lg);
+  border-radius:4px;
+  margin:var(--space-lg) 0;
+  font-size:0.9375rem;
+}
+.box-note{background:var(--py-surface);border-left:3px solid var(--py)}
+.box-warn{background:var(--php-surface);border-left:3px solid var(--php)}
+.box strong{display:block;margin-bottom:4px;font-size:0.8125rem;text-transform:uppercase;letter-spacing:0.04em}
+
+/* Lists */
+.article-list{
+  padding-left:1.25rem;
+  margin-bottom:var(--space-md);
+}
+.article-list li{margin-bottom:var(--space-sm)}
+
+/* Footer */
+.page-footer{
+  margin-top:var(--space-4xl);
+  padding:var(--space-xl) 0;
+  border-top:1px solid var(--border);
+  text-align:center;
+  color:var(--text-dim);
+  font-size:0.8125rem;
+}
+</style>
+</head>
+<body>
+
+<nav class="bridge">
+  <span class="tag tag-py">Python</span>
+  <span class="arrow">→</span>
+  <span class="tag tag-php">PHP</span>
+</nav>
+
+<div class="container">
+
+<header class="hero">
+  <h1>PHP for Python Developers</h1>
+  <p class="subtitle">A practical translation guide — read and write PHP by mapping it to what you already know.</p>
+  <p class="lede">You already understand variables, functions, objects, and control flow. PHP speaks the same concepts with a different syntax. This guide skips the beginner tutorials and goes straight to the translation layer.</p>
+</header>
+
+<section>
+  <h2>At a glance</h2>
+  <p>Keep this table handy for the most common syntax mappings.</p>
+
+  <table class="ref-table">
+    <thead>
+      <tr>
+        <th>Concept</th>
+        <th>Python</th>
+        <th>PHP</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Variable</td>
+        <td><code>x = 1</code></td>
+        <td><code>$x = 1;</code></td>
+      </tr>
+      <tr>
+        <td>Output</td>
+        <td><code>print(x)</code></td>
+        <td><code>echo $x;</code></td>
+      </tr>
+      <tr>
+        <td>String concat</td>
+        <td><code>"a" + "b"</code></td>
+        <td><code>"a" . "b"</code></td>
+      </tr>
+      <tr>
+        <td>Null</td>
+        <td><code>None</code></td>
+        <td><code>null</code></td>
+      </tr>
+      <tr>
+        <td>Boolean</td>
+        <td><code>True / False</code></td>
+        <td><code>true / false</code></td>
+      </tr>
+      <tr>
+        <td>List / Array</td>
+        <td><code>[1, 2, 3]</code></td>
+        <td><code>[1, 2, 3]</code></td>
+      </tr>
+      <tr>
+        <td>Dict / Assoc</td>
+        <td><code>{"a": 1}</code></td>
+        <td><code>["a" =&gt; 1]</code></td>
+      </tr>
+      <tr>
+        <td>Function</td>
+        <td><code>def f():</code></td>
+        <td><code>function f() {}</code></td>
+      </tr>
+      <tr>
+        <td>Class</td>
+        <td><code>class Foo:</code></td>
+        <td><code>class Foo {}</code></td>
+      </tr>
+      <tr>
+        <td>Ternary</td>
+        <td><code>x if c else y</code></td>
+        <td><code>$c ? $x : $y</code></td>
+      </tr>
+      <tr>
+        <td>String interp</td>
+        <td><code>f"hi {name}"</code></td>
+        <td><code>"hi {$name}"</code></td>
+      </tr>
+      <tr>
+        <td>Equality</td>
+        <td><code>==</code></td>
+        <td><code>==</code> (loose) / <code>===</code> (strict)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Variables &amp; types</h2>
+  <p>Both languages are dynamically typed. The only real difference in day-to-day variable use: PHP requires a <code>$</code> prefix on every variable reference.</p>
+
+  <div class="code-pair">
+    <div class="code-block py">
+      <span class="lang-label">Python</span>
+      <pre><span class="hl-com"># Python: dynamic typing</span>
+name = <span class="hl-str">"Alice"</span>
+count = <span class="hl-num">42</span>
+items = [<span class="hl-num">1</span>, <span class="hl-num">2</span>, <span class="hl-num">3</span>]
+
+<span class="hl-kw">def</span> <span class="hl-fn">greet</span>(person):
+    <span class="hl-kw">return</span> <span class="hl-str">f"Hello, {person}"</span></pre>
+    </div>
+    <div class="code-block php">
+      <span class="lang-label">PHP</span>
+      <pre><span class="hl-com">// PHP: same concept, $ prefix</span>
+<span class="hl-var">$name</span> = <span class="hl-str">"Alice"</span>;
+<span class="hl-var">$count</span> = <span class="hl-num">42</span>;
+<span class="hl-var">$items</span> = [<span class="hl-num">1</span>, <span class="hl-num">2</span>, <span class="hl-num">3</span>];
+
+<span class="hl-kw">function</span> <span class="hl-fn">greet</span>(<span class="hl-var">$person</span>) {
+    <span class="hl-kw">return</span> <span class="hl-str">"Hello, {$person}"</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="box box-note">
+    <strong>Note</strong>
+    PHP variables use <code>$</code> on both assignment and access — everywhere. Function names and class names do not use <code>$</code>. Semicolons are required at the end of every statement.
+  </div>
+</section>
+
+<section>
+  <h2>Collections</h2>
+  <p>PHP's array is a hybrid of Python's list and dict. The same <code>[]</code> syntax produces both, distinguished by whether you provide keys.</p>
+
+  <h3>Indexed arrays (like Python lists)</h3>
+  <div class="code-pair">
+    <div class="code-block py">
+      <span class="lang-label">Python</span>
+      <pre>fruits = [<span class="hl-str">"apple"</span>, <span class="hl-str">"banana"</span>]
+fruits.append(<span class="hl-str">"cherry"</span>)
+<span class="hl-fn">len</span>(fruits)  <span class="hl-com"># 3</span>
+fruits[<span class="hl-num">0</span>]      <span class="hl-com"># "apple"</span></pre>
+    </div>
+    <div class="code-block php">
+      <span class="lang-label">PHP</span>
+      <pre><span class="hl-var">$fruits</span> = [<span class="hl-str">"apple"</span>, <span class="hl-str">"banana"</span>];
+<span class="hl-var">$fruits</span>[] = <span class="hl-str">"cherry"</span>;
+<span class="hl-fn">count</span>(<span class="hl-var">$fruits</span>);  <span class="hl-com">// 3</span>
+<span class="hl-var">$fruits</span>[<span class="hl-num">0</span>];       <span class="hl-com">// "apple"</span></pre>
+    </div>
+  </div>
+
+  <h3>Associative arrays (like Python dicts)</h3>
+  <div class="code-pair">
+    <div class="code-block py">
+      <span class="lang-label">Python</span>
+      <pre>user = {
+    <span class="hl-str">"name"</span>: <span class="hl-str">"Alice"</span>,
+    <span class="hl-str">"role"</span>: <span class="hl-str">"admin"</span>
+}
+user[<span class="hl-str">"name"</span>]  <span class="hl-com"># "Alice"</span></pre>
+    </div>
+    <div class="code-block php">
+      <span class="lang-label">PHP</span>
+      <pre><span class="hl-var">$user</span> = [
+    <span class="hl-str">"name"</span> =&gt; <span class="hl-str">"Alice"</span>,
+    <span class="hl-str">"role"</span> =&gt; <span class="hl-str">"admin"</span>
+];
+<span class="hl-var">$user</span>[<span class="hl-str">"name"</span>];  <span class="hl-com">// "Alice"</span></pre>
+    </div>
+  </div>
+
+  <div class="box box-warn">
+    <strong>Watch out</strong>
+    PHP uses <code>=&gt;</code> (fat arrow) not <code>:</code> for key-value pairs. The same <code>[]</code> reads and writes both indexed and associative arrays. Use <code>array_key_exists()</code> or <code>isset()</code> instead of <code>in</code> or <code>has_key()</code>.
+  </div>
+</section>
+
+<section>
+  <h2>Functions</h2>
+  <p>Python's <code>def</code> becomes PHP's <code>function</code>. Parameters get <code>$</code> in their declaration. Return type hints go after a colon.</p>
+
+  <div class="code-pair">
+    <div class="code-block py">
+      <span class="lang-label">Python</span>
+      <pre><span class="hl-kw">def</span> <span class="hl-fn">add</span>(a, b):
+    <span class="hl-kw">return</span> a + b
+
+<span class="hl-com"># Lambda</span>
+square = <span class="hl-kw">lambda</span> x: x ** <span class="hl-num">2</span></pre>
+    </div>
+    <div class="code-block php">
+      <span class="lang-label">PHP</span>
+      <pre><span class="hl-kw">function</span> <span class="hl-fn">add</span>(<span class="hl-var">$a</span>, <span class="hl-var">$b</span>): <span class="hl-kw">int</span> {
+    <span class="hl-kw">return</span> <span class="hl-var">$a</span> + <span class="hl-var">$b</span>;
+}
+
+<span class="hl-com">// Arrow fn (PHP 7.4+)</span>
+<span class="hl-var">$square</span> = <span class="hl-fn">fn</span>(<span class="hl-var">$x</span>) =&gt; <span class="hl-var">$x</span> ** <span class="hl-num">2</span>;</pre>
+    </div>
+  </div>
+
+  <div class="box box-note">
+    <strong>Note</strong>
+    PHP functions have their own variable scope — a function cannot see a variable from the caller unless you declare it <code>global</code> or pass it as a parameter. Arrow functions automatically capture outer scope (like Python closures).
+  </div>
+</section>
+
+<section>
+  <h2>Control flow</h2>
+  <p>The keywords map almost one-to-one. Just remember braces instead of colons+indentation, and <code>elseif</code> is one word.</p>
+
+  <div class="code-pair">
+    <div class="code-block py">
+      <span class="lang-label">Python</span>
+      <pre><span class="hl-kw">if</span> score &gt;= <span class="hl-num">90</span>:
+    grade = <span class="hl-str">"A"</span>
+<span class="hl-kw">elif</span> score &gt;= <span class="hl-num">80</span>:
+    grade = <span class="hl-str">"B"</span>
+<span class="hl-kw">else</span>:
+    grade = <span class="hl-str">"C"</span>
+
+<span class="hl-kw">for</span> item <span class="hl-kw">in</span> items:
+    <span class="hl-fn">print</span>(item)</pre>
+    </div>
+    <div class="code-block php">
+      <span class="lang-label">PHP</span>
+      <pre><span class="hl-kw">if</span> (<span class="hl-var">$score</span> &gt;= <span class="hl-num">90</span>) {
+    <span class="hl-var">$grade</span> = <span class="hl-str">"A"</span>;
+} <span class="hl-kw">elseif</span> (<span class="hl-var">$score</span> &gt;= <span class="hl-num">80</span>) {
+    <span class="hl-var">$grade</span> = <span class="hl-str">"B"</span>;
+} <span class="hl-kw">else</span> {
+    <span class="hl-var">$grade</span> = <span class="hl-str">"C"</span>;
+}
+
+<span class="hl-kw">foreach</span> (<span class="hl-var">$items</span> <span class="hl-kw">as</span> <span class="hl-var">$item</span>) {
+    <span class="hl-kw">echo</span> <span class="hl-var">$item</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="box box-warn">
+    <strong>Gotcha</strong>
+    PHP's <code>foreach</code> operates on a <em>copy</em> of the array by default. Use <code>foreach ($items as &amp;$item)</code> to mutate in place — and <code>unset($item)</code> after to avoid reference leaks.
+  </div>
+</section>
+
+<section>
+  <h2>Classes &amp; objects</h2>
+  <p>PHP 8+ supports constructor property promotion that will feel familiar if you've used Python dataclasses. Visibility is explicit (<code>public</code>, <code>protected</code>, <code>private</code>) and typed properties are standard.</p>
+
+  <div class="code-pair">
+    <div class="code-block py">
+      <span class="lang-label">Python</span>
+      <pre><span class="hl-kw">class</span> <span class="hl-fn">Dog</span>:
+    <span class="hl-kw">def</span> <span class="hl-fn">__init__</span>(<span class="hl-variable">self</span>, name):
+        <span class="hl-variable">self</span>.name = name
+
+    <span class="hl-kw">def</span> <span class="hl-fn">bark</span>(<span class="hl-variable">self</span>):
+        <span class="hl-kw">return</span> <span class="hl-str">f"{self.name} says woof!"</span></pre>
+    </div>
+    <div class="code-block php">
+      <span class="lang-label">PHP</span>
+      <pre><span class="hl-kw">class</span> <span class="hl-fn">Dog</span> {
+    <span class="hl-kw">public function</span> <span class="hl-fn">__construct</span>(
+        <span class="hl-kw">private string</span> <span class="hl-var">$name</span>
+    ) {}
+
+    <span class="hl-kw">public function</span> <span class="hl-fn">bark</span>(): <span class="hl-kw">string</span> {
+        <span class="hl-kw">return</span> <span class="hl-str">"{$this-&gt;name} says woof!"</span>;
+    }
+}</pre>
+    </div>
+  </div>
+
+  <div class="box box-note">
+    <strong>Note</strong>
+    Access properties with <code>$this-&gt;name</code> not <code>self.name</code>. PHP uses <code>-&gt;</code> (arrow) for property and method access on objects, <code>::</code> for static access.
+  </div>
+</section>
+
+<section>
+  <h2>PHP quirks that trip up Python devs</h2>
+
+  <ul class="article-list">
+    <li><strong>The <code>$</code> is mandatory.</strong> Forget it and you get a notice or an undefined constant error. Train your muscle memory early.</li>
+    <li><strong>Semicolons are required.</strong> PHP only infers statement endings at <code>;</code> — missing one breaks the parse.</li>
+    <li><strong><code>==</code> lies.</strong> PHP's <code>==</code> coerces types (<code>"1" == 1</code> is true). Use <code>===</code> for strict equality that checks type too.</li>
+    <li><strong>Concatenation uses <code>.</code> not <code>+</code>.</strong> The <code>+</code> operator does numeric addition (and will coerce strings to numbers).</li>
+    <li><strong>Arrays are ordered maps.</strong> A PHP array is always ordered by insertion. <code>array_merge()</code> replaces <code>+</code> on dicts, <code>array_push()</code> / <code>$arr[] =</code> replaces <code>list.append()</code>.</li>
+    <li><strong>Scope is function-level.</strong> Variables from the outer scope are not visible inside a function unless explicitly imported with <code>use</code> (closures) or <code>global</code>.</li>
+    <li><strong>Methods are not automatically references.</strong> Objects are passed by handle (like Python), but arrays and scalars are passed by value. Use <code>&amp;</code> for explicit references.</li>
+  </ul>
+</section>
+
+<footer class="page-footer">
+  PHP for Python Developers &mdash; You already know more than you think.
+</footer>
+
+</div>
+
+</body>
+</html>
