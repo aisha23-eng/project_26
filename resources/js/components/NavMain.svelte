@@ -31,7 +31,7 @@
                     {#snippet children(props)}
                         <Link
                             href={toUrl(item.href)}
-                            class={props?.class ?? ''}
+                            class="flex flex-row-reverse items-center gap-2 {props?.class ?? ''}"
                         >
                             {#if item.icon}
                                 <item.icon class="size-4 shrink-0" />

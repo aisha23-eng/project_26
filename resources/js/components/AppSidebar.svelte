@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, page } from '@inertiajs/svelte';
     import BarChart3 from 'lucide-svelte/icons/bar-chart-3';
     import Bell from 'lucide-svelte/icons/bell';
     import Bot from 'lucide-svelte/icons/bot';
@@ -13,7 +13,7 @@
     import TrendingUp from 'lucide-svelte/icons/trending-up';
     import WalletCards from 'lucide-svelte/icons/wallet-cards';
     import type { Snippet } from 'svelte';
-    import AppLogo from '@/components/AppLogo.svelte';
+    import AppLogoIcon from '@/components/AppLogoIcon.svelte';
     import NavFooter from '@/components/NavFooter.svelte';
     import NavMain from '@/components/NavMain.svelte';
     import NavUser from '@/components/NavUser.svelte';
@@ -30,7 +30,8 @@
     } from '@/components/ui/sidebar';
     import { themeState } from '@/lib/theme.svelte';
     import { toUrl } from '@/lib/utils';
-    import { dashboard, expenses, income, assistant, reports, categories } from '@/routes';
+    import { dashboard, expenses, income, assistant, reports, categories, budgets, alerts } from '@/routes';
+    import { edit as editProfile } from '@/routes/profile';
     import type { NavItem, Appearance } from '@/types';
 
     let {
@@ -41,6 +42,8 @@
 
     const { appearance, updateAppearance } = themeState();
 
+    const brandName = $derived(page.props.name);
+
     const mainNavItems: NavItem[] = [
         { title: 'لوحة التحكم', href: dashboard(), icon: LayoutGrid },
         { title: 'المصروفات', href: expenses(), icon: Receipt },
@@ -48,9 +51,9 @@
         { title: 'التقارير', href: reports(), icon: BarChart3 },
         { title: 'الفئات', href: categories(), icon: Tags },
         { title: 'المساعد الذكي', href: assistant(), icon: Bot },
-        { title: 'الميزانيات', href: '/budgets', icon: WalletCards },
-        { title: 'التنبيهات', href: '/alerts', icon: Bell },
-        { title: 'الإعدادات', href: '/settings', icon: Settings },
+        { title: 'الميزانيات', href: budgets(), icon: WalletCards },
+        { title: 'التنبيهات', href: alerts(), icon: Bell },
+        { title: 'الإعدادات', href: editProfile(), icon: Settings },
     ];
 
     const footerNavItems: NavItem[] = [
@@ -68,16 +71,19 @@
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton size="lg" asChild>
-                    {#snippet children(props)}
-                        <Link
-                            href={toUrl(dashboard())}
-                            class={props?.class ?? ''}
-                        >
-                            <AppLogo />
-                        </Link>
-                    {/snippet}
-                </SidebarMenuButton>
+<SidebarMenuButton asChild class="px-3 py-1">
+    {#snippet children(props)}
+        <Link
+            href={toUrl(dashboard())}
+            class="relative flex w-full items-center"
+        >
+            <span class="mx-auto text-sm font-semibold">{brandName}</span>
+            <div class="absolute right-3 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+                <AppLogoIcon class="size-5 fill-current text-white dark:text-black" />
+            </div>
+        </Link>
+    {/snippet}
+</SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
     </SidebarHeader>
@@ -86,14 +92,14 @@
         <NavMain items={mainNavItems} />
         <SidebarGroup class="px-3 py-2 mt-auto">
             <SidebarGroupContent>
-                <div class="flex items-center justify-center gap-2 rounded-lg bg-sidebar-accent/50 p-1.5">
+                <div class="flex items-center justify-center gap-1 rounded-lg bg-sidebar-accent/50 p-1">
                     {#each themeOptions as opt (opt.value)}
                         <button
                             onclick={() => updateAppearance(opt.value)}
-                            class="flex size-7 items-center justify-center rounded-md transition-colors {appearance.value === opt.value ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm' : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent'}"
+                            class="flex h-10 flex-1 items-center justify-center rounded-md transition-colors {appearance.value === opt.value ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm' : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent'}"
                             title={opt.value === 'light' ? 'فاتح' : opt.value === 'dark' ? 'داكن' : 'النظام'}
                         >
-                            <opt.icon class="size-3.5" />
+                            <opt.icon class="size-4" />
                         </button>
                     {/each}
                 </div>

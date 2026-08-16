@@ -19,13 +19,6 @@
     }: {
         user: User;
     } = $props();
-
-    function handleLogout(propsOnClick?: () => void) {
-        return () => {
-            propsOnClick?.();
-            router.flushAll();
-        };
-    }
 </script>
 
 <DropdownMenuLabel class="p-0 font-normal">
@@ -35,13 +28,13 @@
 </DropdownMenuLabel>
 <DropdownMenuSeparator />
 <DropdownMenuGroup>
-    <DropdownMenuItem asChild>
-        {#snippet children(props)}
+    <DropdownMenuItem>
+        {#snippet child({ props })}
             <Link
-                class={props?.class ?? ''}
+                class={props.class}
                 href={toUrl(edit())}
                 prefetch
-                onclick={props?.onClick}
+                onclick={props.onClick}
             >
                 <Settings class="mr-2 h-4 w-4" />
                 Settings
@@ -50,17 +43,19 @@
     </DropdownMenuItem>
 </DropdownMenuGroup>
 <DropdownMenuSeparator />
-<DropdownMenuItem asChild>
-    {#snippet children(props)}
-        <Link
-            class={props?.class ?? ''}
-            href={logout()}
-            as="button"
-            onclick={handleLogout(props?.onClick)}
+<DropdownMenuItem>
+    {#snippet child({ props })}
+        <button
+            class={props.class}
+            type="button"
             data-test="logout-button"
+            onclick={() => {
+                props.onClick?.();
+                router.post(logout());
+            }}
         >
             <LogOut class="mr-2 h-4 w-4" />
             Log out
-        </Link>
+        </button>
     {/snippet}
 </DropdownMenuItem>

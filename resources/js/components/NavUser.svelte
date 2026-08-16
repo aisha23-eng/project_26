@@ -23,11 +23,10 @@
     <SidebarMenu>
         <SidebarMenuItem>
             <DropdownMenu class="w-full">
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger asChild class="block w-full">
                     {#snippet children(props)}
                         <SidebarMenuButton
-                            size="lg"
-                            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground px-3 py-1"
                             data-test="sidebar-menu-button"
                             onclick={props?.onclick}
                             aria-expanded={props?.['aria-expanded']}

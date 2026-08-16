@@ -6,8 +6,6 @@ use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
 use App\Models\Category;
 use App\Models\Expense;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -26,7 +24,7 @@ class BudgetController extends Controller
         $end = $start->copy()->endOfMonth();
 
         $budgets = Budget::forUser($user)
-            ->where('month', $start->toDateString())
+            ->where('month', $start)
             ->with('category:id,name,color,icon')
             ->get();
 
@@ -92,7 +90,7 @@ class BudgetController extends Controller
 
         $exists = Budget::forUser($user)
             ->where('category_id', $request->validated('category_id'))
-            ->where('month', $start->toDateString())
+            ->where('month', $start)
             ->exists();
 
         if ($exists) {

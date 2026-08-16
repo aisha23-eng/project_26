@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Ai\Exceptions\RateLimitedException;
 use Laravel\Ai\Streaming\Events\TextDelta;
 use Laravel\Ai\Streaming\Events\ToolCall;
 use Laravel\Ai\Streaming\Events\ToolResult;
@@ -56,7 +57,7 @@ class AssistantController extends Controller
             try {
                 $stream = $agent->stream(
                     $data['message'],
-                    provider: 'opencode',
+                    provider: env('AI_PROVIDER', config('ai.default')),
                     model: env('AI_MODEL'),
                     timeout: 120,
                 );
@@ -88,6 +89,16 @@ class AssistantController extends Controller
                         ]);
                     }
                 }
+            } catch (RateLimitedException $e) {
+                Log::warning('Assistant stream rate limited', [
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage(),
+                ]);
+
+                $this->sendFrame([
+                    'type' => 'error',
+                    'message' => 'وصلت إلى حد الطلبات لدى مزوّد الذكاء الاصطناعي حالياً. أعد المحاولة بعد قليل، أو فعّل مزوّداً مدفوعاً في ملف الإعدادات.',
+                ]);
             } catch (\Throwable $e) {
                 Log::error('Assistant stream failed', [
                     'user_id' => $user->id,
@@ -97,7 +108,7 @@ class AssistantController extends Controller
 
                 $this->sendFrame([
                     'type' => 'error',
-                    'message' => 'An unexpected error occurred while generating the response. Please try again.',
+                    'message' => 'تعذّر الحصول على ردّ من مزوّد الذكاء الاصطناعي في هذه اللحظة. حاول مرة أخرى.',
                 ]);
             }
 

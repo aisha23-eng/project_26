@@ -16,7 +16,13 @@ return [
     */
 
     'ssr' => [
-        'enabled' => true,
+        'enabled' => false,
+        // NOTE: server side rendering is currently disabled. The Inertia SSR
+        // dev server emits hydration markers that don't match the client
+        // bundle after HMR, which triggers `hydration_mismatch` warnings and
+        // leaves pages non-interactive (buttons/theme toggles stop working).
+        // Once SSR is properly configured (ssr entry + production build), you
+        // can re-enable this and serve SSR from the built bundle.
         'url' => 'http://127.0.0.1:13714',
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
 

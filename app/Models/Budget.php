@@ -47,6 +47,6 @@ class Budget extends Model
 
     public function scopeForMonth(Builder $query, Carbon $month): Builder
     {
-        return $query->where('month', $month->copy()->startOfMonth()->toDateString());
+        return $query->where('month', $month->copy()->startOfMonth());
     }
 }

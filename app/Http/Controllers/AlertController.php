@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Expense;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,7 +18,7 @@ class AlertController extends Controller
         $end = now()->endOfMonth();
 
         $budgets = Budget::forUser($user)
-            ->where('month', $start->toDateString())
+            ->where('month', $start)
             ->with('category:id,name,color,icon')
             ->get();
 
