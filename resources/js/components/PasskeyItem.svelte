@@ -66,7 +66,7 @@
                     variant="ghost"
                     size="sm"
                     class="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                    onclick={props.onClick}
+                    onclick={props?.onClick}
                 >
                     <Trash2 class="h-4 w-4" />
                     <span class="sr-only">Remove</span>
@@ -83,7 +83,7 @@
             <DialogFooter>
                 <DialogClose asChild>
                     {#snippet children(props)}
-                        <Button variant="secondary" onclick={props.onClick}>
+                        <Button variant="secondary" onclick={props?.onClick}>
                             Cancel
                         </Button>
                     {/snippet}

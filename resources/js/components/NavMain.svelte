@@ -2,7 +2,6 @@
     import { Link } from '@inertiajs/svelte';
     import {
         SidebarGroup,
-        SidebarGroupLabel,
         SidebarMenu,
         SidebarMenuButton,
         SidebarMenuItem,
@@ -20,8 +19,7 @@
     const url = currentUrlState();
 </script>
 
-<SidebarGroup class="px-2 py-0">
-    <SidebarGroupLabel>Platform</SidebarGroupLabel>
+<SidebarGroup class="px-3 py-1">
     <SidebarMenu>
         {#each items as item (toUrl(item.href))}
             <SidebarMenuItem>
@@ -32,9 +30,8 @@
                 >
                     {#snippet children(props)}
                         <Link
-                            {...props}
                             href={toUrl(item.href)}
-                            class={props.class}
+                            class={props?.class ?? ''}
                         >
                             {#if item.icon}
                                 <item.icon class="size-4 shrink-0" />
@@ -47,3 +44,5 @@
         {/each}
     </SidebarMenu>
 </SidebarGroup>
+
+

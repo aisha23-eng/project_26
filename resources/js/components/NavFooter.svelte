@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Link } from '@inertiajs/svelte';
     import {
         SidebarGroup,
         SidebarGroupContent,
@@ -16,6 +17,11 @@
         items: NavItem[];
         class?: string;
     } = $props();
+
+    function isExternal(href: NonNullable<NavItem['href']>): boolean {
+        const url = typeof href === 'string' ? href : href.url;
+        return url.startsWith('http');
+    }
 </script>
 
 <SidebarGroup class={`group-data-[collapsible=icon]:p-0 ${className}`}>
@@ -28,18 +34,29 @@
                         asChild
                     >
                         {#snippet children(props)}
-                            <a
-                                {...props}
-                                href={toUrl(item.href)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class={props.class}
-                            >
-                                {#if item.icon}
-                                    <item.icon class="size-4 shrink-0" />
-                                {/if}
-                                <span>{item.title}</span>
-                            </a>
+                            {#if isExternal(item.href)}
+                                <a
+                                    href={toUrl(item.href)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class={props?.class ?? ''}
+                                >
+                                    {#if item.icon}
+                                        <item.icon class="size-4 shrink-0" />
+                                    {/if}
+                                    <span>{item.title}</span>
+                                </a>
+                            {:else}
+                                <Link
+                                    href={toUrl(item.href)}
+                                    class={props?.class ?? ''}
+                                >
+                                    {#if item.icon}
+                                        <item.icon class="size-4 shrink-0" />
+                                    {/if}
+                                    <span>{item.title}</span>
+                                </Link>
+                            {/if}
                         {/snippet}
                     </SidebarMenuButton>
                 </SidebarMenuItem>

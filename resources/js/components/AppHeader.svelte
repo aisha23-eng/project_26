@@ -63,17 +63,22 @@
             href: dashboard(),
             icon: LayoutGrid,
         },
+        {
+            title: 'Expenses',
+            href: '/expenses',
+            icon: Folder,
+        },
+        {
+            title: 'Reports',
+            href: '/reports',
+            icon: BookOpen,
+        },
     ];
 
     const rightNavItems: NavItem[] = [
         {
-            title: 'Repository',
-            href: 'https://github.com/laravel/svelte-starter-kit',
-            icon: Folder,
-        },
-        {
-            title: 'Documentation',
-            href: 'https://laravel.com/docs/starter-kits#svelte',
+            title: 'Help',
+            href: '/docs',
             icon: BookOpen,
         },
     ];
@@ -91,14 +96,14 @@
                                 variant="ghost"
                                 size="icon"
                                 class="mr-2 h-9 w-9"
-                                onclick={props.onclick}
-                                aria-expanded={props['aria-expanded']}
+                                onclick={props?.onclick}
+                                aria-expanded={props?.['aria-expanded']}
                             >
                                 <Menu class="h-5 w-5" />
                             </Button>
                         {/snippet}
                     </SheetTrigger>
-                    <SheetContent side="left" class="w-[300px] p-6">
+                    <SheetContent side="left" class="w-75 p-6">
                         <SheetTitle class="sr-only">Navigation menu</SheetTitle>
                         <SheetHeader class="flex justify-start text-left">
                             <AppLogoIcon
@@ -235,9 +240,9 @@
                                 variant="ghost"
                                 size="icon"
                                 class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
-                                onclick={props.onclick}
-                                aria-expanded={props['aria-expanded']}
-                                data-state={props['data-state']}
+                                onclick={props?.onclick}
+                                aria-expanded={props?.['aria-expanded']}
+                                data-state={props?.['data-state']}
                             >
                                 <Avatar
                                     class="size-8 overflow-hidden rounded-full"

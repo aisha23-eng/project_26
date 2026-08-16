@@ -1,8 +1,17 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
-    import BookOpen from 'lucide-svelte/icons/book-open';
-    import FolderGit2 from 'lucide-svelte/icons/folder-git-2';
+    import BarChart3 from 'lucide-svelte/icons/bar-chart-3';
+    import Bell from 'lucide-svelte/icons/bell';
+    import Bot from 'lucide-svelte/icons/bot';
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
+    import Monitor from 'lucide-svelte/icons/monitor';
+    import Moon from 'lucide-svelte/icons/moon';
+    import Receipt from 'lucide-svelte/icons/receipt';
+    import Settings from 'lucide-svelte/icons/settings';
+    import Sun from 'lucide-svelte/icons/sun';
+    import Tags from 'lucide-svelte/icons/tags';
+    import TrendingUp from 'lucide-svelte/icons/trending-up';
+    import WalletCards from 'lucide-svelte/icons/wallet-cards';
     import type { Snippet } from 'svelte';
     import AppLogo from '@/components/AppLogo.svelte';
     import NavFooter from '@/components/NavFooter.svelte';
@@ -16,10 +25,13 @@
         SidebarMenu,
         SidebarMenuButton,
         SidebarMenuItem,
+        SidebarGroup,
+        SidebarGroupContent,
     } from '@/components/ui/sidebar';
+    import { themeState } from '@/lib/theme.svelte';
     import { toUrl } from '@/lib/utils';
-    import { dashboard } from '@/routes';
-    import type { NavItem } from '@/types';
+    import { dashboard, expenses, income, assistant, reports, categories } from '@/routes';
+    import type { NavItem, Appearance } from '@/types';
 
     let {
         children,
@@ -27,25 +39,28 @@
         children?: Snippet;
     } = $props();
 
+    const { appearance, updateAppearance } = themeState();
+
     const mainNavItems: NavItem[] = [
-        {
-            title: 'Dashboard',
-            href: dashboard(),
-            icon: LayoutGrid,
-        },
+        { title: 'لوحة التحكم', href: dashboard(), icon: LayoutGrid },
+        { title: 'المصروفات', href: expenses(), icon: Receipt },
+        { title: 'الدخل', href: income(), icon: TrendingUp },
+        { title: 'التقارير', href: reports(), icon: BarChart3 },
+        { title: 'الفئات', href: categories(), icon: Tags },
+        { title: 'المساعد الذكي', href: assistant(), icon: Bot },
+        { title: 'الميزانيات', href: '/budgets', icon: WalletCards },
+        { title: 'التنبيهات', href: '/alerts', icon: Bell },
+        { title: 'الإعدادات', href: '/settings', icon: Settings },
     ];
 
     const footerNavItems: NavItem[] = [
-        {
-            title: 'Repository',
-            href: 'https://github.com/laravel/svelte-starter-kit',
-            icon: FolderGit2,
-        },
-        {
-            title: 'Documentation',
-            href: 'https://laravel.com/docs/starter-kits#svelte',
-            icon: BookOpen,
-        },
+        { title: 'مركز المساعدة', href: '/docs' },
+    ];
+
+    const themeOptions: { value: Appearance; icon: typeof Sun }[] = [
+        { value: 'light', icon: Sun },
+        { value: 'dark', icon: Moon },
+        { value: 'system', icon: Monitor },
     ];
 </script>
 
@@ -56,9 +71,8 @@
                 <SidebarMenuButton size="lg" asChild>
                     {#snippet children(props)}
                         <Link
-                            {...props}
                             href={toUrl(dashboard())}
-                            class={props.class}
+                            class={props?.class ?? ''}
                         >
                             <AppLogo />
                         </Link>
@@ -70,6 +84,21 @@
 
     <SidebarContent>
         <NavMain items={mainNavItems} />
+        <SidebarGroup class="px-3 py-2 mt-auto">
+            <SidebarGroupContent>
+                <div class="flex items-center justify-center gap-2 rounded-lg bg-sidebar-accent/50 p-1.5">
+                    {#each themeOptions as opt (opt.value)}
+                        <button
+                            onclick={() => updateAppearance(opt.value)}
+                            class="flex size-7 items-center justify-center rounded-md transition-colors {appearance.value === opt.value ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm' : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent'}"
+                            title={opt.value === 'light' ? 'فاتح' : opt.value === 'dark' ? 'داكن' : 'النظام'}
+                        >
+                            <opt.icon class="size-3.5" />
+                        </button>
+                    {/each}
+                </div>
+            </SidebarGroupContent>
+        </SidebarGroup>
     </SidebarContent>
 
     <SidebarFooter>
